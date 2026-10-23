@@ -35,6 +35,95 @@ SkillBridge AI functions as an end-to-end career guidance engine:
 
 ---
 
+## 📁 Project Structure & File Organization
+
+```
+Hacktober_fest/
+├── backend/                              # FastAPI Stateless AI Server
+│   ├── agents/                           # Autonomous Career & LLM Agents
+│   │   ├── career_agent.py               # ReAct Career Orchestration Engine & Tool Dispatcher
+│   │   └── instructions.py               # Gemma 4 System Prompt & Persona
+│   ├── routes/                           # REST API Endpoints
+│   │   ├── chat_routes.py                # POST /chat/chat & POST /chat/extract-cv
+│   │   └── health_routes.py              # GET /health System Diagnostics
+│   ├── schemas/                          # Pydantic Schemas & DTOs
+│   │   └── chat_schemas.py               # ChatRequest, ChatResponse, UserProfile, HealthResponse
+│   ├── services/                         # External API Clients & Integrations
+│   │   ├── gemini_service.py             # Google Gemini SDK & Gemma 4 Caller
+│   │   └── rapidapi_service.py           # JSearch Live Job Search API Client
+│   ├── tools/                            # 10 ReAct Career Intelligence Tools
+│   │   ├── career_tools.py               # CV Analyzer, Skill-Gap, Roadmap, Portfolio, ATS Quality
+│   │   ├── job_tools.py                  # Live Job Search & Semantic Matcher
+│   │   ├── salary_tools.py               # Compensation Benchmarks
+│   │   └── tool_exports.py               # Gemini Function Calling Declarations
+│   ├── tests/                            # Automated Pytest Suite
+│   ├── config.py                         # Environment Configuration & Pydantic Settings
+│   ├── main.py                           # FastAPI App Entrypoint & Lifespan Handler
+│   ├── requirements.txt                  # Python Dependencies
+│   └── vercel.json                       # Vercel Serverless Deployment Config
+│
+├── frontend/                             # Next.js 16 (React 19) Dashboard Web App
+│   ├── public/                           # Static Assets & Icons
+│   ├── src/
+│   │   ├── app/                          # Next.js App Router
+│   │   │   ├── layout.tsx                # Global Root Layout & Metadata
+│   │   │   ├── page.tsx                  # Core Dashboard Page & State Container
+│   │   │   └── globals.css               # Tailwind CSS & Custom Design System
+│   │   ├── components/                   # Modular UI Components
+│   │   │   ├── JobCard.tsx               # Interactive Job Listing Component with Apply Links
+│   │   │   ├── MarkdownRenderer.tsx      # Safe Markdown & Syntax Highlighter
+│   │   │   ├── ProfileContextBar.tsx     # Client-Side Stateless Profile Bar
+│   │   │   ├── Sidebar.tsx               # Collapsible Navigation & Health Status Badge
+│   │   │   └── features/                 # 10 Dedicated Career Advisory Views
+│   │   │       ├── ATSChecker.tsx        # ATS Compatibility Screening & Keyword Density
+│   │   │       ├── CareerProgressView.tsx# Local Milestone & Goal Tracker
+│   │   │       ├── CVAnalyzerView.tsx    # PDF Upload, Degree Extraction & CV Gap Audit
+│   │   │       ├── DashboardView.tsx     # Hero Command Center & Quick Feature Cards
+│   │   │       ├── InterviewPrepView.tsx # STAR Method Technical & Behavioral Prep
+│   │   │       ├── JobFinderView.tsx     # Live Job Search with Pakistan City Aliases
+│   │   │       ├── LearningRoadmapView.tsx# 4-16 Week Structured Learning Plan
+│   │   │       ├── MentorChatView.tsx    # Interactive ReAct AI Career Mentor Chat
+│   │   │       ├── PortfolioView.tsx     # Capstone Project Blueprints & Tech Stack
+│   │   │       ├── ResumeWriter.tsx      # Grounded Resume Generator & Markdown Editor
+│   │   │       ├── SalaryExplorerView.tsx# Global & Regional Compensation Insights
+│   │   │       └── SkillGapView.tsx      # Target Role Readiness Score & Skill Diff
+│   │   ├── lib/
+│   │   │   └── api.ts                    # Stateless Fetch Client with Error Handling
+│   │   └── types/
+│   │       └── index.ts                  # Shared TypeScript Interfaces & DTOs
+│   ├── next.config.ts                    # Next.js & Turbopack Configuration
+│   ├── package.json                      # Frontend NPM Dependencies & Scripts
+│   └── tsconfig.json                     # TypeScript Configuration
+│
+└── README.md                             # Project Documentation
+```
+
+### 🏛️ System Architecture Flow
+
+```mermaid
+graph TD
+    Client["Next.js 16 Frontend<br/>(Stateless React 19 Client)"]
+    
+    subgraph FastAPI_Backend ["FastAPI Serverless Backend (Vercel)"]
+        Router["Chat & CV Routers<br/>(POST /chat/chat)"]
+        Agent["CareerAgent Orchestrator<br/>(ReAct Tool-Use Loop)"]
+        Ontology["Internal Tools & Ontology<br/>(CV Parser, ATS, Gap Analyzer)"]
+    end
+
+    Gemini["Google Gemini API<br/>(Gemma 4 26B Model)"]
+    RapidAPI["RapidAPI JSearch<br/>(Live Job Intel)"]
+
+    Client -->|"1. User Profile + Context + Prompt"| Router
+    Router --> Agent
+    Agent <-->|"2. Function Calling / Prompts"| Gemini
+    Agent <-->|"3. Execute Analytical Tools"| Ontology
+    Agent <-->|"4. Fetch Live Job Listings"| RapidAPI
+    Agent -->|"5. Synthesized Advisory + Matches"| Router
+    Router -->|"6. Cohesive JSON Response"| Client
+```
+
+---
+
 ## 🤖 AI Model & External Services
 
 - **Core AI Model**: **Google Gemma 4 (`gemma-4-26b-a4b-it`)** accessed via Google Gemini API.

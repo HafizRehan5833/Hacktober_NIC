@@ -129,7 +129,7 @@ export const MentorChatView: React.FC<MentorChatViewProps> = ({
         role: "assistant",
         content: `⚠️ **Unable to complete career request**\n\n${
           err.message || "An unexpected network or server error occurred."
-        }\n\nPlease verify that your FastAPI backend is running on \`http://127.0.0.1:8000\`.`,
+        }\n\nPlease check your backend connection or verify that the SkillBridge API service is reachable.`,
         isError: true,
       };
       setMessages((prev) => [...prev, errorMsg]);

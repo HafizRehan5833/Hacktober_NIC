@@ -2,6 +2,9 @@
 
 SkillBridge AI is a modern, responsive career acceleration platform for students, fresh graduates, and job seekers. The frontend connects to the stateless FastAPI backend powered by Gemma 4 and RapidAPI.
 
+> 🌐 **Live URL:** [https://jobfrontend-ten.vercel.app](https://jobfrontend-ten.vercel.app/)  
+> 🔗 **Backend API:** [https://backendjob-xi.vercel.app](https://backendjob-xi.vercel.app/)
+
 ---
 
 ## 🚀 Quick Start Guide

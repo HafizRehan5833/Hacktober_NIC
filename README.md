@@ -6,6 +6,10 @@
 [![Frontend: Next.js 16](https://img.shields.io/badge/Frontend-Next.js%2016-black.svg)](https://nextjs.org/)
 [![Database: None (Stateless)](https://img.shields.io/badge/Database-None%20(Stateless)-lightgrey.svg)](#-architecture--privacy-guarantee)
 
+> 🌐 **Live Deployments:**
+> - **Frontend Web App:** [https://jobfrontend-ten.vercel.app](https://jobfrontend-ten.vercel.app/)
+> - **Backend API:** [https://backendjob-xi.vercel.app](https://backendjob-xi.vercel.app/)
+
 **SkillBridge AI** is an intelligent, privacy-focused career acceleration platform built for the **Hacktoberfest Open-Source AI and Gemma 4 challenges**. It empowers developers, students, and job seekers with instant CV analysis, skill-gap detection, customized weekly roadmaps, portfolio project blueprints, and real-time job openings via RapidAPI.
 
 ---

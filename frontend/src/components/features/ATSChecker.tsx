@@ -10,7 +10,7 @@ import {
   CheckCircle2,
   AlertTriangle,
 } from "lucide-react";
-import { sendChatMessage } from "@/lib/api";
+import { sendChatMessage, extractResumeText } from "@/lib/api";
 import { UserProfile } from "@/types";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 
@@ -25,27 +25,40 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ profile }) => {
   const [fileName, setFileName] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resultContent, setResultContent] = useState<string | null>(null);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setFileName(file.name);
     setError(null);
+    setIsExtracting(true);
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const text = event.target?.result;
-      if (typeof text === "string") {
-        setResumeText(text);
+    try {
+      if (file.name.toLowerCase().endsWith(".pdf")) {
+        const extracted = await extractResumeText(file);
+        setResumeText(extracted);
+      } else {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const text = event.target?.result;
+          if (typeof text === "string") {
+            setResumeText(text);
+          }
+        };
+        reader.onerror = () => {
+          setError("Failed to read the document file. You can paste plain text directly.");
+        };
+        reader.readAsText(file);
       }
-    };
-    reader.onerror = () => {
-      setError("Failed to read the document file. You can paste plain text directly.");
-    };
-    reader.readAsText(file);
+    } catch (err: any) {
+      setError(err?.message || "Failed to extract text from PDF document.");
+    } finally {
+      setIsExtracting(false);
+    }
   };
 
   const handleAnalyze = async () => {
@@ -61,8 +74,6 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ profile }) => {
     try {
       const prompt = `Perform an ATS quality assessment on the following resume for the target role: "${targetRole}".
 ${jobDescription ? `Target Job Description to match against:\n${jobDescription}\n` : ""}
-Resume Text:
-${resumeText}
 
 Please evaluate:
 1. Estimated CV Quality Score (clearly noted as a heuristic estimate)
@@ -74,6 +85,7 @@ Please evaluate:
 
       const res = await sendChatMessage({
         message: prompt,
+        cv_text: resumeText,
         profile: {
           ...profile,
           target_role: targetRole,
@@ -119,10 +131,21 @@ Please evaluate:
                 />
                 <label
                   htmlFor="ats-resume-upload"
-                  className="cursor-pointer text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+                  className={`cursor-pointer text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 ${
+                    isExtracting ? "opacity-50 pointer-events-none" : ""
+                  }`}
                 >
-                  <UploadCloud className="w-3.5 h-3.5" />
-                  <span>Upload File</span>
+                  {isExtracting ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Extracting text...</span>
+                    </>
+                  ) : (
+                    <>
+                      <UploadCloud className="w-3.5 h-3.5" />
+                      <span>Upload File</span>
+                    </>
+                  )}
                 </label>
               </div>
             </div>

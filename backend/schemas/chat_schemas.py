@@ -25,7 +25,7 @@ class ChatRequest(BaseModel):
     Incoming chat payload.
     Supports optional conversation history, profile context, and direct CV text upload.
     """
-    message: Optional[str] = Field(default="", max_length=10000, description="User's query or instruction (optional if uploading CV)")
+    message: Optional[str] = Field(default="", max_length=50000, description="User's query or instruction (optional if uploading CV)")
     profile: Optional[UserProfile] = Field(default=None, description="Client-managed user profile")
     conversation_history: List[ChatMessage] = Field(default_factory=list, max_length=30, description="Client-managed prior history")
     cv_text: Optional[str] = Field(default=None, max_length=100000, description="Direct resume/CV text content uploaded by user")
